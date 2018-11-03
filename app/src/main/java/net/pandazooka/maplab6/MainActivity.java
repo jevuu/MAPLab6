@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         db = this.openOrCreateDatabase("Students",MODE_PRIVATE, null);
 
         //Create table
-        db.execSQL("CREATE TABLE IF NOT EXISTS Students (ID INT(10), Name VARCHAR, Grade Int(3));");
+        db.execSQL("CREATE TABLE IF NOT EXISTS Students (ID VARCHAR, Name VARCHAR, Grade VARCHAR);");
 
 
         studentID       = (EditText) findViewById(R.id.studentID);
@@ -44,14 +44,10 @@ public class MainActivity extends AppCompatActivity {
         btn_StudentAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    int i = Integer.parseInt(studentID.getText().toString());
-                    int g = Integer.parseInt(studentGrade.getText().toString());
+                    String i = studentID.getText().toString();
+                    String g = studentGrade.getText().toString();
                     String n = studentName.getText().toString();
                     addStudent(i, n, g);
-                }catch (NumberFormatException e){
-                    Toast.makeText(MainActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -59,13 +55,10 @@ public class MainActivity extends AppCompatActivity {
         btn_StudentFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    int i = Integer.parseInt(studentID.getText().toString());
+                    String i = studentID.getText().toString();
                     findStudent(i, true);
-                }catch(NumberFormatException e){
                     //Toast.makeText(MainActivity.this, "NumberFormatException", Toast.LENGTH_SHORT).show();
                     alertBuilder("This student does not exist", null);
-                }
             }
         });
 
@@ -81,42 +74,15 @@ public class MainActivity extends AppCompatActivity {
         btn_StudentDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                try {
-                    int i = Integer.parseInt(studentID.getText().toString());
+                    String i = studentID.getText().toString();
                     if (findStudent(i, false)) {
-                        db.execSQL("DELETE FROM Students WHERE ID = " + i + ";");
-
+                        db.execSQL("DELETE FROM Students WHERE ID = '" + i + "';");
                         String alertMsg = "ID:" + i + " Name: " + " Marks:"; //This needs to be fixed
                         alertBuilder("The following student has been deleted", alertMsg);
-                        /*
-                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                        alert.setTitle("The following student has been deleted")
-                                .setMessage("ID:" + i + " Name: " + " Marks:") //This needs to be fixed
-                                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .show();
-                        */
                     } else {
                         alertBuilder("This student does not exist", null);
-                        /*
-                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                        alert.setTitle("This student does not exist")
-                                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .show();
-                        */
                     }
-                }catch(NumberFormatException e){
                     alertBuilder("This student does not exist", null);
-                }
             }
         });
 
@@ -152,29 +118,21 @@ public class MainActivity extends AppCompatActivity {
         }*/
     }
 
-    private void addStudent(int id, String name, int grade){
-        db.execSQL("INSERT INTO Students (ID, Name, Grade) VALUES("
-                + id + ", '"
-                + name + "', "
-                + grade + ");");
-        String alertMsg = "ID:" + id + " Name:" + name + " Marks:" + grade;
-        alertBuilder("The following student was added", alertMsg);
-        /*
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("The following student was added")
-                .setMessage("ID:" + id + " Name:" + name + " Marks:" + grade)
-                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .show();
-        */
+    private void addStudent(String id, String name, String grade){
+        if(id.matches("") || name.matches("") || grade.matches("")){
+            Toast.makeText(this, "Try Again", Toast.LENGTH_SHORT).show();
+        }else {
+            db.execSQL("INSERT INTO Students (ID, Name, Grade) VALUES('"
+                    + id + "', '"
+                    + name + "', '"
+                    + grade + "');");
+            String alertMsg = "ID:" + id + " Name:" + name + " Marks:" + grade;
+            alertBuilder("The following student was added", alertMsg);
+        }
     }
 
-    private boolean findStudent(int id, boolean displayAlert){
-        Cursor c = db.rawQuery("SELECT ID, Name, Grade FROM Students WHERE ID = " + id, null);
+    private boolean findStudent(String id, boolean displayAlert){
+        Cursor c = db.rawQuery("SELECT ID, Name, Grade FROM Students WHERE ID = '" + id + "'", null);
 
         int i = c.getColumnIndex("ID");
         int n = c.getColumnIndex("Name");
@@ -183,45 +141,22 @@ public class MainActivity extends AppCompatActivity {
         //Check if result is valid
         c.moveToFirst();
         if(c != null && c.getCount() > 0){
-            int sID         = c.getInt(i);
+            String sID      = c.getString(i);
             String sName    = c.getString(n);
-            int sGrade      = c.getInt(g);
+            String sGrade   = c.getString(g);
 
-            Log.d("ID", valueOf(sID));
+            Log.d("ID", sID);
             Log.d("Name", sName);
-            Log.d("Grade", valueOf(sGrade));
+            Log.d("Grade", sGrade);
 
             if(displayAlert) {
                 String alertMsg = "ID:" + sID + " Name: " + sName + " Marks:" + sGrade;
                 alertBuilder("Student details are as follows", alertMsg);
-                /*
-                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle("Student details are as follows")
-                        .setMessage("ID:" + sID + " Name: " + sName + " Marks:" + sGrade)
-                        .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
-               */
             }
             return true;
         }else {
             if (displayAlert) {
                 alertBuilder("This student does not exist", null);
-                /*
-                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle("This student does not exist")
-                        .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
-                */
             }
             return false;
         }
@@ -240,13 +175,13 @@ public class MainActivity extends AppCompatActivity {
         if(c != null && c.getCount() > 0) {
             //Loop through results
             do {
-                int sID = c.getInt(i);
+                String sID = c.getString(i);
                 String sName = c.getString(n);
-                int sGrade = c.getInt(g);
+                String sGrade = c.getString(g);
 
-                Log.d("ID", valueOf(sID));
+                Log.d("ID", sID);
                 Log.d("Name", sName);
-                Log.d("Grade", valueOf(sGrade));
+                Log.d("Grade", sGrade);
 
                 alertMsg.append("ID:" + sID + " Name: " + sName + " Marks:" + sGrade + "\n");
             } while (c.moveToNext());
@@ -256,31 +191,8 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 alertBuilder("The following students have been added", alertMsg.toString());
             }
-            /*
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setTitle("The following students have been added") //Needs a singular version
-                    .setMessage(dialogMsg)
-                    .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-            */
         }else {
             alertBuilder("No students were found", null);
-            /*
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setTitle("No students were found")
-                    .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-            */
         }
     }
 
