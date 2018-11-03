@@ -31,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = this.openOrCreateDatabase("Students",MODE_PRIVATE, null);
+
+        //Create table
+        db.execSQL("CREATE TABLE IF NOT EXISTS Students (ID INT(10), Name VARCHAR, Grade Int(3));");
+
+
         studentID       = (EditText) findViewById(R.id.studentID);
         studentName     = (EditText) findViewById(R.id.studentName);
         studentGrade    = (EditText) findViewById(R.id.studentGrade);
@@ -80,14 +86,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_StudentAll      = (Button) findViewById(R.id.btn_StudentAll);
+        btn_StudentAll = (Button) findViewById(R.id.btn_StudentAll);
+        btn_StudentAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Cursor c = db.rawQuery("SELECT * FROM Students", null);
+
+                int i = c.getColumnIndex("ID");
+                int n = c.getColumnIndex("Name");
+                int g = c.getColumnIndex("Grade");
+
+                //Check if result is valid
+                c.moveToFirst();
+                if(c != null) {
+                    //Loop through results
+                    do {
+                        int sID = c.getInt(i);
+                        String sName = c.getString(n);
+                        int sGrade = c.getInt(g);
+
+                        Log.d("ID", valueOf(sID));
+                        Log.d("Name", sName);
+                        Log.d("Grade", valueOf(sGrade));
+
+                        studentID.setText(valueOf(sID));
+                        studentName.setText(sName);
+                        studentGrade.setText(valueOf(sGrade));
+                    } while (c.moveToNext());
+                }
+            }
+        });
 
         btn_StudentUnknown  = (Button) findViewById(R.id.btn_StudentUnknown);
-
-        db = this.openOrCreateDatabase("Students",MODE_PRIVATE, null);
-
-        //Create table
-        db.execSQL("CREATE TABLE IF NOT EXISTS Students (ID INT(10), Name VARCHAR, Grade Int(3));");
 
         //Insert data into table
         //db.execSQL("INSERT INTO Students (ID, Name, Grade) VALUES(1, 'Justin', 100);");

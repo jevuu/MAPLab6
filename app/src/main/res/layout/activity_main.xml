@@ -14,18 +14,21 @@
             android:id="@+id/studentID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:textSize="48dp"
             android:text="9999" />
         <EditText
             android:id="@+id/studentName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName"
             android:textSize="48dp"
             android:text="Me" />
         <EditText
             android:id="@+id/studentGrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:textSize="48dp"
             android:text="-100" />
         <Button
