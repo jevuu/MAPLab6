@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/studentID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48dp"
+            android:text="9999" />
+        <EditText
+            android:id="@+id/studentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48dp"
+            android:text="Me" />
+        <EditText
+            android:id="@+id/studentGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48dp"
+            android:text="-100" />
+        <Button
+            android:id="@+id/btn_StudentAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Student" />
+        <Button
+            android:id="@+id/btn_StudentFind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Find Student By ID" />
+        <Button
+            android:id="@+id/btn_StudentAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All Students" />
+        <Button
+            android:id="@+id/btn_StudentUnknown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question?" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
