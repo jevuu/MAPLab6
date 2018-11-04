@@ -47,7 +47,12 @@ public class MainActivity extends AppCompatActivity {
                     String i = studentID.getText().toString();
                     String g = studentGrade.getText().toString();
                     String n = studentName.getText().toString();
-                    addStudent(i, n, g);
+                    if(addStudent(i, n, g)) {
+                        studentID.setText("");
+                        studentName.setText("");
+                        studentGrade.setText("");
+                    }else {
+                    }
             }
         });
 
@@ -55,10 +60,14 @@ public class MainActivity extends AppCompatActivity {
         btn_StudentFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    String i = studentID.getText().toString();
-                    findStudent(i, true);
-                    //Toast.makeText(MainActivity.this, "NumberFormatException", Toast.LENGTH_SHORT).show();
-                    alertBuilder("This student does not exist", null);
+                String i = studentID.getText().toString();
+                findDeleteStudent(i, false);
+                //Toast.makeText(MainActivity.this, "NumberFormatException", Toast.LENGTH_SHORT).show();
+                //alertBuilder("This student does not exist", null);
+
+                studentID.setText("");
+                studentName.setText("");
+                studentGrade.setText("");
             }
         });
 
@@ -75,14 +84,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                     String i = studentID.getText().toString();
-                    if (findStudent(i, false)) {
-                        db.execSQL("DELETE FROM Students WHERE ID = '" + i + "';");
-                        String alertMsg = "ID:" + i + " Name: " + " Marks:"; //This needs to be fixed
-                        alertBuilder("The following student has been deleted", alertMsg);
-                    } else {
-                        alertBuilder("This student does not exist", null);
-                    }
-                    alertBuilder("This student does not exist", null);
+                    findDeleteStudent(i, true);
+                        //String alertMsg = "ID:" + i + " Name: " + " Marks:"; //This needs to be fixed
+                        //alertBuilder("The following student has been deleted", alertMsg);
+                    //} else {
+                    //    alertBuilder("This student does not exist", null);
+                    //}
+                    //alertBuilder("This student does not exist", null);
+
+                studentID.setText("");
+                studentName.setText("");
+                studentGrade.setText("");
             }
         });
 
@@ -118,9 +130,10 @@ public class MainActivity extends AppCompatActivity {
         }*/
     }
 
-    private void addStudent(String id, String name, String grade){
+    private boolean addStudent(String id, String name, String grade){
         if(id.matches("") || name.matches("") || grade.matches("")){
             Toast.makeText(this, "Try Again", Toast.LENGTH_SHORT).show();
+            return false;
         }else {
             db.execSQL("INSERT INTO Students (ID, Name, Grade) VALUES('"
                     + id + "', '"
@@ -128,10 +141,11 @@ public class MainActivity extends AppCompatActivity {
                     + grade + "');");
             String alertMsg = "ID:" + id + " Name:" + name + " Marks:" + grade;
             alertBuilder("The following student was added", alertMsg);
+            return true;
         }
     }
 
-    private boolean findStudent(String id, boolean displayAlert){
+    private void findDeleteStudent(String id, boolean delete){
         Cursor c = db.rawQuery("SELECT ID, Name, Grade FROM Students WHERE ID = '" + id + "'", null);
 
         int i = c.getColumnIndex("ID");
@@ -149,16 +163,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Name", sName);
             Log.d("Grade", sGrade);
 
-            if(displayAlert) {
+            if(delete) {
+                db.execSQL("DELETE FROM Students WHERE ID = '" + id + "';");
+                String alertMsg = "ID:" + sID + " Name: " + sName + " Marks:" + sGrade;
+                alertBuilder("The following student has been deleted", alertMsg);
+            }else{
                 String alertMsg = "ID:" + sID + " Name: " + sName + " Marks:" + sGrade;
                 alertBuilder("Student details are as follows", alertMsg);
             }
-            return true;
+            //return true;
         }else {
-            if (displayAlert) {
                 alertBuilder("This student does not exist", null);
-            }
-            return false;
+            //return false;
         }
     }
 

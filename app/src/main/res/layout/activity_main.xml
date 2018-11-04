@@ -17,65 +17,67 @@
             android:layout_height="wrap_content"
             android:background="#00f"
             android:textColor="#fff"
-            android:textSize="24dp"
+            android:textSize="28dp"
             android:text="Justin Vuu"
             android:gravity="center" />
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TableRow>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:textSize="28dp"
                     android:textStyle="bold"
                     android:textColor="#000"
-                    android:text="ID"
-                    android:layout_weight="1"/>
+                    android:text="ID" />
                 <EditText
                     android:id="@+id/studentID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:textSize="28dp"
-                    android:hint="ID"
-                    android:layout_weight="3"/>
-            </TableRow>
-            <TableRow>
+                    android:hint="ID" />
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:textSize="28dp"
                     android:textColor="#00f"
-                    android:text="Name"
-                    android:layout_weight="1"/>
+                    android:text="Name"/>
                 <EditText
                     android:id="@+id/studentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:textSize="28dp"
-                    android:hint="Name"
-                    android:layout_weight="3"/>
-            </TableRow>
-            <TableRow>
+                    android:hint="Name"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="25dp">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:textSize="28dp"
                     android:textColor="#00f"
-                    android:text="Marks"
-                    android:layout_weight="1"/>
+                    android:text="Marks"/>
                 <EditText
                     android:id="@+id/studentGrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:textSize="28dp"
-                    android:hint="Marks"
-                    android:layout_weight="3"/>
-            </TableRow>
-        </TableLayout>
+                    android:hint="Marks"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_StudentAdd"
